@@ -28,7 +28,7 @@
 # "renv" It can be installed as follows:
 # if (!is.element("renv", installed.packages()[, 1])) {
 # install.packages("renv", dependencies = TRUE,
-repos = "https://cloud.r-project.org") # nolint
+# repos = "https://cloud.r-project.org") # nolint
 # }
 # require("renv") # nolint
 
@@ -86,7 +86,7 @@ lapply(.libPaths(), list.files)
 # [OPTIONAL]
 # Execute the following code to reinstall the specific package versions
 # recorded in the lockfile (restart R after executing the command):
-# renv::restore() # nolint
+renv::restore() # nolint
 
 # [OPTIONAL]
 # If you get several errors setting up renv and you prefer not to use it, then
