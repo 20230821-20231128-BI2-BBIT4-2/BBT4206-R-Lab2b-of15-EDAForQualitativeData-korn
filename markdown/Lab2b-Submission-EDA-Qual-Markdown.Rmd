@@ -60,6 +60,9 @@ library(dplyr)
 library(magrittr)
 library(knitr)
 library(ggplot2)
+library (tidytext)
+library(kableExtra)
+
 ```
 
 ------------------------------------------------------------------------
@@ -337,6 +340,53 @@ Number of Significant Words in Evaluation Wishes per Group: Minus contractions, 
 
 ```{r Your Seventh Code Chunk}
 # Fill this with other R related code that will be executed when the R markdown
+
+#undesirable_words
+undesirable_words <- c("wow", "lol", "none", "na")
+#evaluation_likes_and_wishes
+evaluation_likes_and_wishes <- student_performance_dataset %>%
+  mutate(`Student's Gender` =
+           ifelse(gender == 1, "Male", "Female")) %>%
+  rename(`Class Group` = class_group) %>%
+  rename(Likes = `D - 1. \nWrite two things you like about the teaching and learning in this unit so far.`) %>% # nolint
+  rename(Wishes = `D - 2. Write at least one recommendation to improve the teaching and learning in this unit (for the remaining weeks in the semester)`) %>% # nolint
+  select(`Class Group`,
+         `Student's Gender`, `Average Course Evaluation Rating`,
+         Likes, Wishes) %>%
+  filter(!is.na(`Average Course Evaluation Rating`)) %>%
+  arrange(`Class Group`)
+
+#unnest
+evaluation_likes_filtered <- evaluation_likes_and_wishes %>% # nolint
+  # We start by tokenization (un-nesting words). This is from the variable
+  # "Like" into the variable "word".
+  unnest_tokens(word, Likes) %>%
+  # Then we remove stopwords using an anti-join (remember this from the
+  # BBT3104: Advanced Database Systems course)
+  # Anti-join: do not join where the word is in the list of stopwords
+  anti_join(stop_words, by = c("word")) %>%
+  distinct() %>%
+  # Censor or filter out unwanted words
+  filter(!word %in% undesirable_words) %>%
+  # Include only words that are more than 3 characters long (assuming that
+  # these are the words that are meaningful)
+  filter(nchar(word) > 3) %>%
+  # We then rename the variable "word" for ease of use.
+  rename(`Likes (tokenized)` = word) %>%
+  # We focus only on the likes in this data frame
+  select(-Wishes)
+
+#evaluation_wishes_filtered
+evaluation_wishes_filtered <- evaluation_likes_and_wishes %>% # nolint
+  unnest_tokens(word, Wishes) %>%
+  anti_join(stop_words, by = c("word")) %>%
+  distinct() %>%
+  filter(!word %in% undesirable_words) %>%
+  filter(nchar(word) > 3) %>%
+  rename(`Wishes (tokenized)` = word) %>%
+  select(-Likes)
+
+
 word_count_per_group_wishes <- evaluation_wishes_filtered %>%
   group_by(`Class Group`) %>%
   summarise(num_words = n()) %>%
