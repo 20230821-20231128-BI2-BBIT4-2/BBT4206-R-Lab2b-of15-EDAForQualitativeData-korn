@@ -95,11 +95,11 @@ knitr::opts_chunk$set(
 
 The 20230412-20230719-BI1-BBIT4-1-StudentPerformanceDataset is then loaded. The dataset and its metadata are available here: <https://drive.google.com/drive/folders/1-BGEhfOwquXF6KKXwcvrx7WuZXuqmW9q?usp=sharing>
 
-```{r Load Dataset}
-
+```{r Load Dataset, error = TRUE}
 student_performance_dataset <-
   readr::read_csv(
-                  "../data/20230412-20230719-BI1-BBIT4-1-StudentPerformanceDataset.csv", # nolint
+                  "data/20230412-20230719-BI1-BBIT4-1-StudentPerformanceDataset.CSV", # nolint
+
                   col_types =
                   readr::cols(
                               class_group =
@@ -231,6 +231,9 @@ student_performance_dataset <-
                                                         c("A", "B", "C", "D",
                                                           "E"))),
                   locale = readr::locale())
+
+View(student_performance_dataset)
+
 ```
 
 ## Description of the Dataset
@@ -264,7 +267,6 @@ evaluation_per_group_per_gender %>%
   ggtitle("Course Evaluation Rating per Group and per Gender") +
   labs(x = "Class Group", y = "Average Rating")
 ```
-
 ## Word Count.
 
 Number of Significant Words in Evaluation Wishes per Group: Minus contractions, special characters, stop-words, short words, and censored words.
