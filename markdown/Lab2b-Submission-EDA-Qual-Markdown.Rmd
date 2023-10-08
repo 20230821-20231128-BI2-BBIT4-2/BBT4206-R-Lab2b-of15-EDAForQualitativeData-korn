@@ -260,6 +260,66 @@ Here we obtain data of the average rating per gender and per group and create a 
 
 ```{r Your Sixth Code Chunk}
 # Fill this with R related code that will be executed when the R markdown file
+
+#blue_grey_theme
+blue_grey_colours_11 <- c("#27408E", "#304FAF", "#536CB5", "#6981c7", "#8da0db",
+                          "#dde5ec", "#c8c9ca", "#B9BCC2", "#A7AAAF", "#888A8E",
+                          "#636569")
+
+blue_grey_colours_6 <- c("#27408E", "#304FAF", "#536CB5",
+                         "#B9BCC2", "#A7AAAF", "#888A8E")
+
+blue_grey_colours_4 <- c("#27408E", "#536CB5",
+                         "#B9BCC2", "#888A8E")
+
+blue_grey_colours_3 <- c("#6981c7", "#304FAF", "#888A8E")
+
+blue_grey_colours_2 <- c("#27408E",
+                         "#888A8E")
+
+blue_grey_colours_1 <- c("#6981c7")
+
+# Custom theme for visualizations
+blue_grey_theme <- function() {
+  theme(
+    axis.ticks = element_line(
+                              linewidth = 1, linetype = "dashed",
+                              lineend = NULL, color = "#dfdede",
+                              arrow = NULL, inherit.blank = FALSE),
+    axis.text = element_text(
+                             face = "bold", color = "#3f3f41",
+                             size = 12, hjust = 0.5),
+    axis.title = element_text(face = "bold", color = "#3f3f41",
+                              size = 14, hjust = 0.5),
+    plot.title = element_text(face = "bold", color = "#3f3f41",
+                              size = 16, hjust = 0.5),
+    panel.grid = element_line(
+                              linewidth = 0.1, linetype = "dashed",
+                              lineend = NULL, color = "#dfdede",
+                              arrow = NULL, inherit.blank = FALSE),
+    panel.background = element_rect(fill = "#f3eeee"),
+    legend.title = element_text(face = "plain", color = "#3f3f41",
+                                size = 12, hjust = 0),
+    legend.position = "right"
+  )
+}
+
+
+# evaluation_per_group_per_gender
+evaluation_per_group_per_gender <- student_performance_dataset %>% # nolint
+  mutate(`Student's Gender` =
+           ifelse(gender == 1, "Male", "Female")) %>%
+  select(class_group, gender,
+         `Student's Gender`, `Average Course Evaluation Rating`) %>%
+  filter(!is.na(`Average Course Evaluation Rating`)) %>%
+  group_by(class_group, `Student's Gender`) %>%
+  summarise(average_evaluation_rating =
+              mean(`Average Course Evaluation Rating`)) %>%
+  arrange(desc(average_evaluation_rating), .by_group = TRUE)
+
+
+
+
 evaluation_per_group_per_gender %>%
   ggplot() +
   geom_bar(aes(x = class_group, y = average_evaluation_rating,
