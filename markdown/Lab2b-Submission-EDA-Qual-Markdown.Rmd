@@ -56,6 +56,10 @@ if (!is.element("readr", installed.packages()[, 1])) {
                    repos="https://cloud.r-project.org")
 }
 require("readr")
+library(dplyr)
+library(magrittr)
+library(knitr)
+library(ggplot2)
 ```
 
 ------------------------------------------------------------------------
