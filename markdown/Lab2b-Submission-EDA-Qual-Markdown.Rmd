@@ -98,7 +98,7 @@ The 20230412-20230719-BI1-BBIT4-1-StudentPerformanceDataset is then loaded. The 
 ```{r Load Dataset, error = TRUE}
 student_performance_dataset <-
   readr::read_csv(
-                  "data/20230412-20230719-BI1-BBIT4-1-StudentPerformanceDataset.CSV", # nolint
+                  "../data/20230412-20230719-BI1-BBIT4-1-StudentPerformanceDataset.CSV", # nolint
 
                   col_types =
                   readr::cols(
