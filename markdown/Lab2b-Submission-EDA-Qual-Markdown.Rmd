@@ -11,31 +11,32 @@ output:
     df_print: default
 editor_options:
   chunk_output_type: console
+always_allow_html: yes 
 ---
 
 # Student Details
 
-+---------------------------------------------------+-----------------------------------------------------+
-| **Student ID Numbers and Names of Group Members** | 1.  134644 - C - Sebastian Muramara                 |
-|                                                   |                                                     |
-|                                                   | 2.  136675 - C - Bernard Otieno                     |
-|                                                   |                                                     |
-|                                                   | 3.  131589 - C - Agnes Anyango                      |
-|                                                   |                                                     |
-|                                                   | 4.  131582 - C - Njeri Njuguna                      |
-|                                                   |                                                     |
-|                                                   | 5.  136009 - C- Sera Ndabari                        |
-+---------------------------------------------------+-----------------------------------------------------+
-| **GitHub Classroom Group Name**                   | Korn                                                |
-+---------------------------------------------------+-----------------------------------------------------+
-| **Course Code**                                   | BBT4206                                             |
-+---------------------------------------------------+-----------------------------------------------------+
-| **Course Name**                                   | Business Intelligence II                            |
-+---------------------------------------------------+-----------------------------------------------------+
-| **Program**                                       | Bachelor of Business Information Technology         |
-+---------------------------------------------------+-----------------------------------------------------+
-| **Semester Duration**                             | 21^st^ August 2023 to 28^th^ November 2023          |
-+---------------------------------------------------+-----------------------------------------------------+
++---------------------------------------------------+---------------------------------------------+
+| **Student ID Numbers and Names of Group Members** | 1.  134644 - C - Sebastian Muramara         |
+|                                                   |                                             |
+|                                                   | 2.  136675 - C - Bernard Otieno             |
+|                                                   |                                             |
+|                                                   | 3.  131589 - C - Agnes Anyango              |
+|                                                   |                                             |
+|                                                   | 4.  131582 - C - Njeri Njuguna              |
+|                                                   |                                             |
+|                                                   | 5.  136009 - C- Sera Ndabari                |
++---------------------------------------------------+---------------------------------------------+
+| **GitHub Classroom Group Name**                   | Korn                                        |
++---------------------------------------------------+---------------------------------------------+
+| **Course Code**                                   | BBT4206                                     |
++---------------------------------------------------+---------------------------------------------+
+| **Course Name**                                   | Business Intelligence II                    |
++---------------------------------------------------+---------------------------------------------+
+| **Program**                                       | Bachelor of Business Information Technology |
++---------------------------------------------------+---------------------------------------------+
+| **Semester Duration**                             | 21^st^ August 2023 to 28^th^ November 2023  |
++---------------------------------------------------+---------------------------------------------+
 
 # Setup Chunk
 
@@ -50,18 +51,92 @@ if (!is.element("formatR", installed.packages()[, 1])) {
 require("formatR")
 
 
-## readr - Load datasets from CSV files ----
-if (!is.element("readr", installed.packages()[, 1])) {
-  install.packages("readr", dependencies = TRUE,
-                   repos="https://cloud.r-project.org")
+## dplyr - For data manipulation ----
+if (!is.element("dplyr", installed.packages()[, 1])) {
+  install.packages("dplyr", dependencies = TRUE,
+  repos = "https://cloud.r-project.org")
 }
-require("readr")
-library(dplyr)
-library(magrittr)
-library(knitr)
-library(ggplot2)
-library (tidytext)
-library(kableExtra)
+require("dplyr")
+
+## ggplot2 - For data visualizations using the Grammar for Graphics package ----
+if (!is.element("ggplot2", installed.packages()[, 1])) {
+install.packages("ggplot2", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("ggplot2")
+
+## ggrepel - Additional options for the Grammar for Graphics package ----
+if (!is.element("ggrepel", installed.packages()[, 1])) {
+install.packages("ggrepel", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("ggrepel")
+
+## ggraph - Additional options for the Grammar for Graphics package ----
+if (!is.element("ggraph", installed.packages()[, 1])) {
+install.packages("ggraph", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("ggraph")
+
+## tidytext - For text mining ----
+if (!is.element("tidytext", installed.packages()[, 1])) {
+install.packages("tidytext", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("tidytext")
+
+## tidyr - To tidy messy data ----
+if (!is.element("tidyr", installed.packages()[, 1])) {
+install.packages("tidyr", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("tidyr")
+
+## widyr - To widen, process, and re-tidy a dataset ----
+if (!is.element("widyr", installed.packages()[, 1])) {
+install.packages("widyr", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("widyr")
+
+## gridExtra - to arrange multiple grid-based plots on a page ----
+if (!is.element("gridExtra", installed.packages()[, 1])) {
+install.packages("gridExtra", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("gridExtra")
+
+## knitr - for dynamic report generation ----
+if (!is.element("knitr", installed.packages()[, 1])) {
+install.packages("knitr", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("knitr")
+
+## kableExtra - for nicely formatted output tables ----
+if (!is.element("kableExtra", installed.packages()[, 1])) {
+install.packages("kableExtra", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("kableExtra")
+
+## formattable -  To create a formattable object ----
+# A formattable object is an object to which a formatting function and related
+# attributes are attached.
+if (!is.element("formattable", installed.packages()[, 1])) {
+install.packages("formattable", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("formattable")
+
+## circlize - To create a cord diagram or visualization ----
+# by Gu et al. (2014)
+if (!is.element("circlize", installed.packages()[, 1])) {
+install.packages("circlize", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("circlize")
 
 ```
 
@@ -334,6 +409,7 @@ evaluation_per_group_per_gender %>%
   ggtitle("Course Evaluation Rating per Group and per Gender") +
   labs(x = "Class Group", y = "Average Rating")
 ```
+
 ## Word Count.
 
 Number of Significant Words in Evaluation Wishes per Group: Minus contractions, special characters, stop-words, short words, and censored words.
@@ -405,7 +481,7 @@ word_count_per_group_wishes %>%
 
 ```
 
-## Top 10 words per gender
+## TOP 10 WORDS PER GENDER (LIKES)
 
 This code generates a horizontal bar chart that displays the top 10 most frequently used words in course evaluation "Likes" for each gender group. The bars are coloured by gender, and each gender has its own facet (sub-plot) for comparison. This visualization helps you understand which words are most commonly used in course evaluation likes and whether there are any gender-specific patterns in the choice of words.
 
@@ -435,7 +511,7 @@ popular_words %>%
 
 ```
 
-## Top 10 words per gender
+## TOP 10 WORDS PER GENDER (WISHES)
 
 This code generates a horizontal bar chart that displays the top 10 most frequently used words in course evaluation "Wishes" for each gender group. Similar to the one above
 
