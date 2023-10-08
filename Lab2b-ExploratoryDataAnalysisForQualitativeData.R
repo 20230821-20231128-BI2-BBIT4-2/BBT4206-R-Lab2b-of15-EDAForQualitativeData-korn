@@ -656,6 +656,59 @@ write.csv(evaluation_likes_and_wishes,
 
 #https://cran.r-project.org/web/packages/textstem/readme/README.html
 
+install.packages("tm")
+install.packages("NLP")
+
+library(tm)
+library(NLP)
+install.packages("udpipe")
+library(udpipe)
+
+# Download and load the English language model
+# Download and load the language model (replace "english" with the appropriate language)
+language_model <- "english"
+ud_model <- udpipe_download_model(language_model)
+#udpipe_model <- udpipe_model_path(ud_model$file_model)
+udpipe_model <- udpipe_load_model(ud_model$file_model)
+
+#ud_model <- udpipe_download_model(language_model = "english")
+#if(!ud_model$download_failed){
+#  ud <- udpipe_load_model(ud_model)
+#}
+#udpipe_model <- udpipe_model_path(ud_model$file_model)
+
+# Load the dataset
+student_performance_dataset <- read.csv("data/evaluation_likes_and_wishes.csv")  # Replace with your dataset file path
+
+# Initialize the udpipe pipeline
+udpipe_annotator <- udpipe_annotate(likes,udpipe_model)
+udpipe_annotator <- udpipe_annotate(udpipe_model)
+
+# Create a function to lemmatize text
+lemmatize_text <- function(text) {
+  processed_data <- udpipe_annotate(udpipe_annotator, x = text)
+  lemmatized_data <- as.data.frame(processed_data)
+  lemmas <- lemmatized_data$lemma
+  return(lemmas)
+}
+
+
+
+# Apply lemmatization to the 'text_data' column
+evaluation_likes_and_wishes$lemmatized_text <- sapply(evaluation_likes_and_wishes$Likes, lemmatize_text)
+
+
+
+
+# Assuming student_performance_dataset is your data frame with a 'text_data' column
+corpus <- Corpus(VectorSource(evaluation_likes_and_wishes$Likes))
+
+# Preprocess the text: convert to lowercase and lemmatize
+corpus <- tm_map(corpus, content_transformer(tolower))
+corpus <- tm_map(corpus, content_transformer(lemmatize_strings))
+
+# Retrieve the lemmatized text
+evaluation_likes_and_wishes$lemmatized_text <- sapply(corpus, as.character)
 
 
 
