@@ -28,7 +28,7 @@
 # "renv" It can be installed as follows:
 # if (!is.element("renv", installed.packages()[, 1])) {
 # install.packages("renv", dependencies = TRUE,
-repos = "https://cloud.r-project.org") # nolint
+# repos = "https://cloud.r-project.org") # nolint
 # }
 # require("renv") # nolint
 
@@ -654,6 +654,69 @@ write.csv(evaluation_likes_and_wishes,
 #       word stem, base or root form
 #  (iii) Word replacement: replace words with more frequently used synonyms
 
+#https://cran.r-project.org/web/packages/textstem/readme/README.html
+
+install.packages("tm")
+install.packages("NLP")
+
+library(tm)
+library(NLP)
+install.packages("udpipe")
+library(udpipe)
+
+# Download and load the English language model
+# Download and load the language model (replace "english" with the appropriate language)
+language_model <- "english"
+ud_model <- udpipe_download_model(language_model)
+#udpipe_model <- udpipe_model_path(ud_model$file_model)
+udpipe_model <- udpipe_load_model(ud_model$file_model)
+
+#ud_model <- udpipe_download_model(language_model = "english")
+#if(!ud_model$download_failed){
+#  ud <- udpipe_load_model(ud_model)
+#}
+#udpipe_model <- udpipe_model_path(ud_model$file_model)
+
+# Load the dataset
+student_performance_dataset <- read.csv("data/evaluation_likes_and_wishes.csv")  # Replace with your dataset file path
+
+# Initialize the udpipe pipeline
+udpipe_annotator <- udpipe_annotate(likes,udpipe_model)
+udpipe_annotator <- udpipe_annotate(udpipe_model)
+
+# Create a function to lemmatize text
+lemmatize_text <- function(text) {
+  processed_data <- udpipe_annotate(udpipe_annotator, x = text)
+  lemmatized_data <- as.data.frame(processed_data)
+  lemmas <- lemmatized_data$lemma
+  return(lemmas)
+}
+
+
+
+# Apply lemmatization to the 'text_data' column
+evaluation_likes_and_wishes$lemmatized_text <- sapply(evaluation_likes_and_wishes$Likes, lemmatize_text)
+
+
+
+
+# Assuming student_performance_dataset is your data frame with a 'text_data' column
+corpus <- Corpus(VectorSource(evaluation_likes_and_wishes$Likes))
+
+# Preprocess the text: convert to lowercase and lemmatize
+corpus <- tm_map(corpus, content_transformer(tolower))
+corpus <- tm_map(corpus, content_transformer(lemmatize_strings))
+
+# Retrieve the lemmatized text
+evaluation_likes_and_wishes$lemmatized_text <- sapply(corpus, as.character)
+
+
+
+
+
+
+
+
 ## Tokenization ----
 # The goal of text mining is to discover relevant information that is possibly
 # unknown or hidden. Natural Language Processing (NLP) is one methodology used
@@ -689,6 +752,7 @@ write.csv(evaluation_likes_and_wishes,
 # Examples of stopwords in English include:
 # "the," "and," "is," "in," "it," "of," "to," "for," and "with."
 
+View(stop_words)
 # Additional examples can be seen here:
 head(sample(stop_words$word, 20), 20)
 
